@@ -8,11 +8,12 @@ For every clip in the plan it:
   2. snaps the cut points to word boundaries and cuts the clip
      (a clip may have several segments; they are joined with a jump cut)
   3. reframes 16:9 to 9:16 (1080x1920):
-       blur   - the episode in the middle over a blurred copy (default, always safe)
-       face   - full-screen crop that follows the largest face (needs opencv)
+       face   - full-screen crop that follows the speaker's face (default, needs opencv)
        center - plain centre crop
-  4. burns word-by-word captions (the spoken word is highlighted),
-     the hook title and a credit line to the original podcast
+       blur   - the episode in the middle over a blurred copy
+  4. burns the style that top Spanish podcast Shorts use (docs/shorts-style-research.md):
+     1-2 word captions with the spoken word highlighted, a big headline for the
+     first seconds, a brand tag and a credit line; optional quiet background music
   5. writes the YouTube title, description, hashtags and pinned comment
 
 Examples:
@@ -41,6 +42,7 @@ W, H = 1080, 1920
 FONT_CAPTION = "Montserrat Black"
 FONT_HOOK = "Montserrat ExtraBold"
 FONT_CREDIT = "Montserrat SemiBold"
+FONT_HEADLINE = "Anton"
 
 VERBOSE = False
 
@@ -413,10 +415,42 @@ def paginate(words, max_words, max_chars, max_gap=0.6):
     return pages
 
 
-def build_ass(words, duration, hook, credit, layout, style):
+def style_color(hex_rgb, alpha=0):
+    """'#FFE500' -> '&H0000E5FF' for the [V4+ Styles] section (&HAABBGGRR)."""
+    h = hex_rgb.lstrip("#").upper()
+    return f"&H{alpha:02X}{h[4:6]}{h[2:4]}{h[0:2]}"
+
+
+def headline_text(text, accent):
+    """'LE CRECIÓ | UNA *PLANTA*' -> ASS text: *marked* words in the accent colour, | = new line."""
+    out, on = [], False
+    text = ass_text(text).replace(" | ", "|").replace("|", "\\N")   # "|" = line break
+    for part in re.split(r"(\*)", text):
+        if part == "*":
+            on = not on
+            out.append(f"{{\\1c{accent}}}" if on else "{\\1c&HFFFFFF&}")
+        else:
+            out.append(part)
+    return "".join(out)
+
+
+def build_ass(words, duration, hook, credit, brand, layout, style):
+    """Captions + headline + brand tag + credit, in the style of the Spanish podcast Shorts
+    that perform best (see docs/shorts-style-research.md):
+      - captions: 1-2 words at a time, big heavy uppercase, a small pop when a new group
+        appears, the spoken word in the accent colour, placed on the chest (~62% of the height)
+      - headline: huge condensed text with an accent keyword for the first seconds (it is
+        also what the feed shows as the first frame)
+      - small brand tag top-left and a credit line to the original podcast"""
     upper = style.get("caption_uppercase", True)
-    hi = ass_color(style.get("highlight", "#FFE500"))
+    accent = style.get("highlight", "#FFE500")
+    hi = ass_color(accent) if accent else None
     white = ass_color("#FFFFFF")
+    cap_font = style.get("caption_font", FONT_CAPTION)
+    cap_size = style.get("caption_size", 100)
+    head_font = style.get("headline_font", FONT_HEADLINE)
+    head_size = style.get("headline_size", 170)
+    head_secs = float(style.get("headline_seconds", 3.0))
     lines = [
         "[Script Info]", "ScriptType: v4.00+", f"PlayResX: {W}", f"PlayResY: {H}",
         "WrapStyle: 0", "ScaledBorderAndShadow: yes", "YCbCr Matrix: TV.709", "",
@@ -424,28 +458,34 @@ def build_ass(words, duration, hook, credit, layout, style):
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, "
         "Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, "
         "Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-        f"Style: Caption,{FONT_CAPTION},{style.get('caption_size', 84)},&H00FFFFFF,&H00FFFFFF,&H00000000,"
-        "&H80000000,-1,0,0,0,100,100,0,0,1,6,3,5,70,70,0,1",
-        f"Style: Hook,{FONT_HOOK},58,&H00141414,&H00141414,&H00FFFFFF,&H00000000,"
-        "-1,0,0,0,100,100,0,0,3,16,0,2,110,110,0,1",
-        f"Style: Credit,{FONT_CREDIT},34,&H30FFFFFF,&H30FFFFFF,&H00000000,&H00000000,"
-        "0,0,0,0,100,100,1,0,1,2,0,8,60,60,0,1",
+        f"Style: Caption,{cap_font},{cap_size},&H00FFFFFF,&H00FFFFFF,&H00000000,"
+        "&H64000000,0,0,0,0,100,100,1,0,1,7,4,5,80,80,0,1",
+        f"Style: Headline,{head_font},{head_size},&H00FFFFFF,&H00FFFFFF,&H00000000,"
+        "&H50000000,0,0,0,0,100,100,1,0,1,8,6,5,70,70,0,1",
+        f"Style: Brand,{FONT_HOOK},34,&H00101010,&H00101010,{style_color(accent or '#FFE500')},"
+        "&H00000000,0,0,0,0,100,100,1,0,3,10,0,7,0,0,0,1",
+        f"Style: Credit,{FONT_CREDIT},32,&H30FFFFFF,&H30FFFFFF,&H00000000,&H00000000,"
+        "0,0,0,0,100,100,1,0,1,2,1,7,0,0,0,1",
         "", "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
     ]
     end_all = ass_time(duration)
-    if hook:
-        if layout["hook_always"]:
-            lines.append(f"Dialogue: 2,0:00:00.00,{end_all},Hook,,0,0,0,,"
-                         f"{{\\an2\\pos(540,{layout['hook_y']})}}{ass_text(hook)}")
-        else:
-            lines.append(f"Dialogue: 2,0:00:00.00,{ass_time(min(4.5, duration))},Hook,,0,0,0,,"
-                         f"{{\\an8\\pos(540,{layout['hook_y']})\\fad(150,300)}}{ass_text(hook)}")
+    if brand:
+        lines.append(f"Dialogue: 3,0:00:00.00,{end_all},Brand,,0,0,0,,"
+                     f"{{\\an7\\pos(64,{layout['brand_y']})}}{ass_text(brand.upper())}")
     if credit:
-        lines.append(f"Dialogue: 1,0:00:00.00,{end_all},Credit,,0,0,0,,"
-                     f"{{\\an8\\pos(540,{layout['credit_y']})}}{ass_text(credit)}")
+        lines.append(f"Dialogue: 3,0:00:00.00,{end_all},Credit,,0,0,0,,"
+                     f"{{\\an7\\pos(64,{layout['credit_y']})}}{ass_text(credit)}")
+    if hook:
+        text = headline_text(hook.upper(), ass_color(accent or "#FFE500"))
+        if layout["headline_always"]:
+            lines.append(f"Dialogue: 2,0:00:00.00,{end_all},Headline,,0,0,0,,"
+                         f"{{\\an2\\pos(540,{layout['headline_y']})\\fs{int(head_size * 0.72)}}}{text}")
+        else:
+            lines.append(f"Dialogue: 2,0:00:00.00,{ass_time(min(head_secs, duration))},Headline,,0,0,0,,"
+                         f"{{\\an5\\pos(540,{layout['headline_y']})\\fad(0,200)}}{text}")
 
-    pages = paginate(words, style.get("caption_max_words", 3), style.get("caption_max_chars", 20))
+    pages = paginate(words, style.get("caption_max_words", 2), style.get("caption_max_chars", 16))
     for p, page in enumerate(pages):
         nxt = pages[p + 1][0].start if p + 1 < len(pages) else duration
         page_end = min(page[-1].end + 0.25, nxt, duration)
@@ -455,10 +495,14 @@ def build_ass(words, duration, hook, credit, layout, style):
             e = page[i + 1].start if i + 1 < len(page) else page_end
             if e - s < 0.02:
                 continue
-            body = " ".join(
-                f"{{\\1c{hi}}}{t}{{\\1c{white}}}" if j == i else t for j, t in enumerate(toks))
+            if hi:
+                body = " ".join(f"{{\\1c{hi}}}{t}{{\\1c{white}}}" if j == i else t
+                                for j, t in enumerate(toks))
+            else:
+                body = " ".join(toks)
+            pop = "\\fscx88\\fscy88\\t(0,90,\\fscx100\\fscy100)" if i == 0 else ""
             lines.append(f"Dialogue: 0,{ass_time(s)},{ass_time(e)},Caption,,0,0,0,,"
-                         f"{{\\an5\\pos(540,{layout['caption_y']})}}{body}")
+                         f"{{\\an5\\pos(540,{layout['caption_y']}){pop}}}{body}")
     return "\n".join(lines) + "\n"
 
 
@@ -470,17 +514,21 @@ def layout_for(reframe, src_w, src_h, zoom):
         fg_h = min(H, even(fg_w * src_h / src_w))
         top = (H - fg_h) // 2
         bottom = top + fg_h
-        return dict(fg_w=fg_w, fg_h=fg_h, hook_always=True, hook_y=top - 42,
-                    credit_y=bottom + 16, caption_y=min(bottom + 190, 1560))
-    return dict(hook_always=False, hook_y=250, credit_y=150, caption_y=1270)
+        return dict(fg_w=fg_w, fg_h=fg_h, headline_always=True, headline_y=top - 40,
+                    brand_y=150, credit_y=bottom + 18, caption_y=min(bottom + 200, 1560))
+    # full-screen 9:16, like every top-performing Short we looked at
+    return dict(headline_always=False, headline_y=600, brand_y=150, credit_y=212, caption_y=1190)
 
 
-def render_clip(src, segments, ass_path, out_path, reframe, layout, crop_expr, fonts_rel, fast):
+def render_clip(src, segments, ass_path, out_path, reframe, layout, crop_expr, fonts_rel, fast,
+                music=None, music_volume=0.12):
     n = len(segments)
     duration = sum(b - a for a, b in segments)
     inputs = []
     for a, b in segments:
         inputs += ["-ss", f"{a:.3f}", "-t", f"{b - a:.3f}", "-i", str(src)]
+    if music:
+        inputs += ["-stream_loop", "-1", "-i", str(music)]
     fg = []
     if n > 1:
         fg.append("".join(f"[{i}:v:0][{i}:a:0]" for i in range(n)) + f"concat=n={n}:v=1:a=1[cv][ca]")
@@ -500,7 +548,13 @@ def render_clip(src, segments, ass_path, out_path, reframe, layout, crop_expr, f
         fg.append(f"[cv]scale=-2:{H},crop={W}:{H},setsar=1[rv]")
     sub = f"ass=filename={ass_path.name}" + (f":fontsdir={fonts_rel}" if fonts_rel else "")
     fg.append(f"[rv]{sub}[vout]")
-    fg.append(f"[ca]afade=t=in:d=0.06,afade=t=out:st={max(0.0, duration - 0.2):.3f}:d=0.2,"
+    voice = "[ca]"
+    if music:   # quiet emotional bed under the voice, as CastClips and others do
+        fg.append(f"[{n}:a:0]atrim=0:{duration:.3f},volume={music_volume},afade=t=in:d=1,"
+                  f"afade=t=out:st={max(0.0, duration - 1.5):.3f}:d=1.5[mus]")
+        fg.append("[ca][mus]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[mix]")
+        voice = "[mix]"
+    fg.append(f"{voice}afade=t=in:d=0.06,afade=t=out:st={max(0.0, duration - 0.2):.3f}:d=0.2,"
               "loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[aout]")
     preset, crf = ("ultrafast", "26") if fast else ("medium", "18")
     cmd = ["ffmpeg", "-hide_banner", "-y", *inputs, "-filter_complex", ";".join(fg),
@@ -531,6 +585,8 @@ def write_metadata(plan, clip, folder):
     if len(title) > 100:
         print(f"   WARNING: title is {len(title)} chars (YouTube max 100)")
     desc = clip.get("description", "").strip()
+    if clip.get("pinned_comment"):          # the question for the comments goes in the description too
+        desc += "\n\n" + clip["pinned_comment"].strip()
     if plan.get("description_footer"):
         desc += "\n\n" + plan["description_footer"].strip()
     if tags:
@@ -602,7 +658,7 @@ def process_plan(plan, args):
             else:
                 local = localize(words, segments)
 
-        reframe = args.reframe or clip.get("reframe") or plan.get("reframe") or "blur"
+        reframe = args.reframe or clip.get("reframe") or plan.get("reframe") or "face"
         zoom = float(args.zoom or clip.get("zoom") or plan.get("zoom") or 1.0)
         layout = layout_for(reframe, src_w, src_h, zoom)
         crop_expr = None
@@ -613,11 +669,19 @@ def process_plan(plan, args):
             print(f"   using your edited {ass.name}")
         else:
             hook = None if args.no_hook else clip.get("hook")
-            ass.write_text(build_ass(local, duration, hook, plan.get("credit"), layout, style),
-                           encoding="utf-8")
+            ass.write_text(build_ass(local, duration, hook, plan.get("credit"), plan.get("brand"),
+                                     layout, style), encoding="utf-8")
 
         out = folder / f"{cid}.mp4"
-        render_clip(src, segments, ass, out, reframe, layout, crop_expr, fonts_rel, args.fast)
+        music = args.music or clip.get("music") or plan.get("music")
+        if music:
+            music = Path(music)
+            if not music.exists() and args.plan:      # plan paths are relative to the plan file
+                music = Path(args.plan).resolve().parent / music
+            if not music.exists():
+                die(f"music file not found: {music}")
+        render_clip(src, segments, ass, out, reframe, layout, crop_expr, fonts_rel, args.fast,
+                    music, float(args.music_volume or plan.get("music_volume") or 0.12))
         title, desc = write_metadata(plan, clip, folder)
         print(f"   OK -> {out}")
         sheet.append(f"## {cid}\n\n- file: `{cid}/{cid}.mp4` ({duration:.0f} s)\n"
@@ -647,8 +711,8 @@ def selftest(args):
         t += 1800
     subs = tmp / "episode.es.json3"
     subs.write_text(json.dumps({"events": events}, ensure_ascii=False), encoding="utf-8")
-    plan = {"name": "selftest", "credit": "ROCA PROJECT #114 · Borja Moreno",
-            "clips": [{"id": f"t-{m}", "title": "Prueba #shorts", "hook": "Un forense elige cómo quiere que le entierren",
+    plan = {"name": "selftest", "credit": "ROCA PROJECT #114 · Borja Moreno", "brand": "Momentos Podcast",
+            "clips": [{"id": f"t-{m}", "title": "Prueba #shorts", "hook": "No quiere que le *incineren*",
                        "reframe": m, "segments": [{"start": "0:01.5", "end": "0:08", "start_at": "qué"},
                                                   {"start": "0:10", "end": "0:16", "end_after": "momento"}]}
                       for m in ("blur", "face", "center")]}
@@ -664,10 +728,13 @@ def main():
     p.add_argument("--only", nargs="+", help="render only clips whose id starts with these (e.g. 01 04)")
     p.add_argument("--source", help="local episode video instead of downloading")
     p.add_argument("--subs", help="local YouTube json3 captions for --source")
-    p.add_argument("--reframe", choices=["blur", "face", "center"], help="9:16 layout (default: blur)")
+    p.add_argument("--reframe", choices=["face", "center", "blur"],
+                   help="9:16 layout (default: face = full screen following the speaker)")
     p.add_argument("--zoom", type=float, help="blur layout: enlarge the episode (1.0-1.6, crops the sides)")
     p.add_argument("--whisper", nargs="?", const="small", metavar="MODEL",
                    help="make captions with faster-whisper instead of YouTube captions (default model: small)")
+    p.add_argument("--music", help="background music file mixed quietly under the voice")
+    p.add_argument("--music-volume", type=float, help="music level, 0.05-0.25 (default 0.12)")
     p.add_argument("--no-captions", action="store_true", help="do not burn captions")
     p.add_argument("--no-hook", action="store_true", help="do not burn the hook title")
     p.add_argument("--no-snap", action="store_true", help="use the plan times exactly")

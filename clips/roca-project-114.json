@@ -9,6 +9,7 @@
     "published": "2026-11-04",
     "views_when_planned": 546346
   },
+  "brand": "Momentos Podcast",
   "credit": "ROCA PROJECT #114 · Borja Moreno",
   "description_footer": "🎙️ Entrevista completa: ROCA PROJECT #114 con Borja Moreno\n👉 https://www.youtube.com/watch?v=XDDt-IzJOcA\nTodo el mérito de la conversación es de Carlos Roca y ROCA PROJECT.",
   "default_hashtags": [
@@ -16,17 +17,20 @@
     "#RocaProject",
     "#MedicoForense"
   ],
-  "reframe": "blur",
+  "reframe": "face",
   "style": {
+    "highlight": "#FFE500",
     "caption_uppercase": true,
-    "caption_max_words": 3,
-    "highlight": "#FFE500"
+    "caption_max_words": 2,
+    "caption_size": 100,
+    "headline_size": 170,
+    "headline_seconds": 3.0
   },
   "clips": [
     {
       "id": "01-besar-hoy",
-      "title": "Médico forense: «Al que tengáis que besar, besarle hoy» 🤍 #shorts",
-      "hook": "Un forense elige cómo quiere que le entierren",
+      "title": "Un médico forense revela por qué NO quiere que le incineren 🥀 #shorts #podcast",
+      "hook": "NO QUIERE QUE | LE *INCINEREN*",
       "segments": [
         {
           "start": "56:32.0",
@@ -44,8 +48,8 @@
     },
     {
       "id": "02-planta-cadaver",
-      "title": "Del cuerpo de esta mujer creció una planta… y el forense la plantó en el cementerio 🌱 #shorts",
-      "hook": "Le había crecido una planta en el cuerpo",
+      "title": "A esta mujer le creció una PLANTA en el cuerpo… y el forense hizo esto 🌱 #shorts #podcast",
+      "hook": "LE CRECIÓ | UNA *PLANTA*",
       "segments": [
         {
           "start": "37:35.8",
@@ -61,8 +65,8 @@
     },
     {
       "id": "03-corazon-sigue-latiendo",
-      "title": "La asesinaron frente a un colegio… y su corazón sigue latiendo en otra persona ❤️ #shorts",
-      "hook": "Su corazón sigue latiendo en otra persona",
+      "title": "La asesinaron frente a un colegio… y su CORAZÓN sigue latiendo 💔 #shorts #podcast",
+      "hook": "SU CORAZÓN | *SIGUE LATIENDO*",
       "segments": [
         {
           "start": "40:26.4",
@@ -79,8 +83,8 @@
     },
     {
       "id": "04-asesino-perfecto",
-      "title": "Médico forense: «Nosotros somos el asesino perfecto» 😳 #shorts",
-      "hook": "¿Podría un forense cometer el crimen perfecto?",
+      "title": "Un médico forense confiesa por qué serían el ASESINO PERFECTO 😳 #shorts #podcast",
+      "hook": "EL ASESINO | *PERFECTO*",
       "segments": [
         {
           "start": "58:14.8",
@@ -96,8 +100,8 @@
     },
     {
       "id": "05-ceuta",
-      "title": "«No quiero seguir haciendo autopsias a chicos de 20 años» 💔 Un forense en Ceuta #shorts",
-      "hook": "Lo más duro de ser forense en Ceuta",
+      "title": "Lo más DURO que ha vivido un médico forense en Ceuta 💔 #shorts #podcast",
+      "hook": "AUTOPSIAS A | *CHICOS DE 20 AÑOS*",
       "segments": [
         {
           "start": "55:03.6",
@@ -114,8 +118,8 @@
     },
     {
       "id": "06-la-maldad-no-existe",
-      "title": "Médico forense: «Para mí, la maldad no existe» 🤔 #shorts",
-      "hook": "¿Existe la maldad? Responde un forense",
+      "title": "¿Existe la MALDAD? Un médico forense responde 🤔 #shorts #podcast",
+      "hook": "¿EXISTE LA | *MALDAD*?",
       "segments": [
         {
           "start": "15:28.7",
@@ -138,8 +142,8 @@
     },
     {
       "id": "07-movieron-el-cadaver",
-      "title": "El forense supo que habían movido el cadáver solo con mirarlo 🕵️ #shorts",
-      "hook": "Movieron el cadáver… y el cuerpo los delató",
+      "title": "Movieron el cadáver… y el RIGOR MORTIS los delató 🕵️ #shorts #podcast",
+      "hook": "MOVIERON EL | *CADÁVER*",
       "segments": [
         {
           "start": "30:59.4",
@@ -157,8 +161,8 @@
     },
     {
       "id": "08-manoli-felicidad",
-      "title": "Cómo afronta la muerte un médico forense: «Manoli, esta es tu felicidad» 🤍 #shorts",
-      "hook": "¿Cómo afronta la muerte quien la ve cada día?",
+      "title": "Un médico forense revela cómo afronta la MUERTE 🥀 #shorts #podcast",
+      "hook": "MANOLI, ESTA ES | *TU FELICIDAD*",
       "segments": [
         {
           "start": "61:00.0",

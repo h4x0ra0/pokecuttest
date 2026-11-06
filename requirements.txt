@@ -1,6 +1,6 @@
 # download episodes and captions from YouTube
 yt-dlp>=2025.10.22
-# only for --reframe face (OpenCV 5 dropped the Haar face detector, so stay on 4.x)
+# face tracking for the default full-screen layout (OpenCV 5 dropped the Haar face detector, so stay on 4.x)
 opencv-python-headless>=4.8,<5
 # optional, only for --whisper:
 # faster-whisper>=1.0

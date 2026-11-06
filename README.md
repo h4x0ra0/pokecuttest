@@ -3,9 +3,13 @@
 ეს რეპო [@Momentos1Podcast](https://www.youtube.com/@momentos1podcast) არხისთვისაა. ერთი ბრძანებით
 ესპანურენოვანი პოდკასტის ეპიზოდიდან შერჩეულ მომენტებს ატვირთვისთვის მზა YouTube Shorts-ებად აქცევს:
 
-- 1080×1920, 9:16 ფორმატი
-- სუბტიტრები სიტყვა-სიტყვით: ნათქვამი სიტყვა ყვითლად ინთება (Montserrat ფონტი უკვე რეპოშია)
-- ზემოთ სათაური, რომელიც მაყურებელს აჩერებს, და წყაროს მითითება (`ROCA PROJECT #114 · Borja Moreno`)
+- 1080×1920, მთელ ეკრანზე, კადრი მოსაუბრის სახეს მისდევს
+- სტილი აღებულია ყველაზე წარმატებული ესპანური პოდკასტ-Shorts-ებიდან ([კვლევა](docs/shorts-style-research.md)):
+  - დიდი ორხაზიანი სათაური პირველ 3 წამში, ერთი სიტყვა ყვითლად (Anton ფონტი);
+  - სუბტიტრები 1–2 სიტყვით, UPPERCASE, ნათქვამი სიტყვა ყვითლად ინთება (Montserrat Black);
+  - «MOMENTOS PODCAST» ეტიკეტი და წყაროს მითითება (`ROCA PROJECT #114 · Borja Moreno`);
+  - სურვილისამებრ ფონზე ჩუმი მუსიკა (`--music`)
+- ფონტები უკვე რეპოშია, ყველა OFL ლიცენზიით
 - ჭრა ზუსტად სიტყვის საზღვარზე. ერთ კლიპს რამდენიმე მონაკვეთის შეერთებაც შეუძლია (jump cut)
 - ხმის დონე გასწორებულია (−14 LUFS), დასაწყისი და ბოლო რბილადაა გადასული
 - ყველა ვიდეოს გვერდით დევს `youtube.txt` ფაილი: სათაური, აღწერა ჰეშთეგებით და დასამაგრებელი კომენტარი
@@ -18,16 +22,18 @@
 [#114 «MÉDICO FORENSE: LA MUERTE HABLA», Borja Moreno](https://www.youtube.com/watch?v=XDDt-IzJOcA).
 გამოვიდა 2026-11-04 და 2 დღეში 546 ათასი ნახვა დააგროვა.
 
-| # | ფაილი | ხანგრძლ. | სათაური |
-|---|---|---|---|
-| 1 | `01-besar-hoy` | ~52 წმ | Médico forense: «Al que tengáis que besar, besarle hoy» 🤍 |
-| 2 | `02-planta-cadaver` | ~54 წმ | Del cuerpo de esta mujer creció una planta… |
-| 3 | `03-corazon-sigue-latiendo` | ~47 წმ | La asesinaron frente a un colegio… y su corazón sigue latiendo |
-| 4 | `04-asesino-perfecto` | ~49 წმ | Médico forense: «Nosotros somos el asesino perfecto» 😳 |
-| 5 | `05-ceuta` | ~56 წმ | «No quiero seguir haciendo autopsias a chicos de 20 años» 💔 |
-| 6 | `06-la-maldad-no-existe` | ~45 წმ | Médico forense: «Para mí, la maldad no existe» 🤔 |
-| 7 | `07-movieron-el-cadaver` | ~45 წმ | El forense supo que habían movido el cadáver solo con mirarlo 🕵️ |
-| 8 | `08-manoli-felicidad` | ~55 წმ | Cómo afronta la muerte un médico forense: «Manoli, esta es tu felicidad» |
+| # | ფაილი | ხანგრძლ. | სათაური | ვიდეოზე (პირველი 3 წმ) |
+|---|---|---|---|---|
+| 1 | `01-besar-hoy` | ~52 წმ | Un médico forense revela por qué NO quiere que le incineren 🥀 | NO QUIERE QUE LE **INCINEREN** |
+| 2 | `02-planta-cadaver` | ~54 წმ | A esta mujer le creció una PLANTA en el cuerpo… y el forense hizo esto 🌱 | LE CRECIÓ UNA **PLANTA** |
+| 3 | `03-corazon-sigue-latiendo` | ~47 წმ | La asesinaron frente a un colegio… y su CORAZÓN sigue latiendo 💔 | SU CORAZÓN **SIGUE LATIENDO** |
+| 4 | `04-asesino-perfecto` | ~49 წმ | Un médico forense confiesa por qué serían el ASESINO PERFECTO 😳 | EL ASESINO **PERFECTO** |
+| 5 | `05-ceuta` | ~56 წმ | Lo más DURO que ha vivido un médico forense en Ceuta 💔 | AUTOPSIAS A **CHICOS DE 20 AÑOS** |
+| 6 | `06-la-maldad-no-existe` | ~45 წმ | ¿Existe la MALDAD? Un médico forense responde 🤔 | ¿EXISTE LA **MALDAD**? |
+| 7 | `07-movieron-el-cadaver` | ~45 წმ | Movieron el cadáver… y el RIGOR MORTIS los delató 🕵️ | MOVIERON EL **CADÁVER** |
+| 8 | `08-manoli-felicidad` | ~55 წმ | Un médico forense revela cómo afronta la MUERTE 🥀 | MANOLI, ESTA ES **TU FELICIDAD** |
+
+ყველა სათაურს ბოლოში `#shorts #podcast` აქვს.
 
 ## ინსტალაცია (ერთხელ)
 
@@ -66,12 +72,21 @@ python scripts/make_shorts.py clips/roca-project-114.json --fast
 
 | რეჟიმი | როგორ გამოიყურება | როდის |
 |---|---|---|
-| `blur` (ნაგულისხმევი) | ეპიზოდი შუაშია, უკან იგივე კადრი დაბურული, ზემოთ სათაური, ქვემოთ სუბტიტრები | ყოველთვის გამოდგება, არავის ჭრის |
-| `face` | მთელ ეკრანზე, კადრი სახეს მისდევს (OpenCV) | ახლო ხედი, ერთი ადამიანი კადრში |
+| `face` (ნაგულისხმევი) | მთელ ეკრანზე, კადრი სახეს მისდევს (OpenCV). სახე თუ ვერ იპოვა, ცენტრიდან ჭრის | ყველა წარმატებული Short ასეა |
 | `center` | უბრალოდ ცენტრიდან ამოჭრილი | თუ მოსაუბრე ყოველთვის ცენტრშია |
+| `blur` | ეპიზოდი შუაშია, უკან იგივე კადრი დაბურული | ფართო კადრი, სადაც ორივე ადამიანი უნდა ჩანდეს |
 
 `--zoom 1.3` (`blur` რეჟიმში) ეპიზოდის კადრს ადიდებს და გვერდებს აჭრის.
 რეჟიმი და zoom თითო კლიპზე JSON-შიც შეიძლება მიეთითოს (`"reframe": "face"`).
+
+### ფონური მუსიკა
+
+```bash
+python scripts/make_shorts.py clips/roca-project-114.json --music musica/triste.mp3 --music-volume 0.10
+```
+
+მუსიკა ხმის ქვეშ ძალიან ჩუმად ერთვება და ბოლოს რბილად ქრება. გამოიყენე მხოლოდ ისეთი ტრეკი, რომლის გამოყენების უფლებაც გაქვს
+(მაგ., YouTube Audio Library). ალტერნატივა: ატვირთვისას YouTube-ის რედაქტორში მუსიკა თავად დაამატე.
 
 ### სუბტიტრები
 
@@ -101,7 +116,7 @@ python scripts/make_shorts.py clips/roca-project-114.json --only 03 --keep-subs
 {
   "id": "01-mi-clip",
   "title": "Título para YouTube #shorts",
-  "hook": "Texto grande arriba del vídeo",
+  "hook": "TEXTO GRANDE | CON *PALABRA* EN AMARILLO",
   "segments": [
     {"start": "56:32.0", "end": "57:23.6", "start_at": "yo", "end_after": "sea"}
   ],
@@ -111,10 +126,15 @@ python scripts/make_shorts.py clips/roca-project-114.json --only 03 --keep-subs
 }
 ```
 
+- `hook`: დიდი სათაური პირველ 3 წამში. `|` ნიშნავს ახალ ხაზს, `*…*` კი ყვითელ სიტყვას
 - `start`/`end`: დრო ეპიზოდში (`MM:SS.s` ან `H:MM:SS.s`)
 - `start_at` / `end_after` (არასავალდებულო): კლიპი ზუსტად ამ სიტყვით დაიწყება და დასრულდება
   (სკრიპტი მითითებულ დროსთან ყველაზე ახლოს მყოფ შემთხვევას ირჩევს)
 - თუ `segments`-ში რამდენიმე მონაკვეთია, ისინი ერთ კლიპად შეერთდება
+- გეგმის დონეზე: `brand` (ეტიკეტი), `credit`, `reframe`, `music` და `style` (ფერი `highlight`, `caption_size`,
+  `caption_max_words`, `headline_size`, `headline_seconds`)
+
+სათაურის, აღწერისა და მონტაჟის წესები: [`docs/shorts-style-research.md`](docs/shorts-style-research.md)
 
 მომენტების მოსაძებნად ტრანსკრიპტი შეგიძლია მე გამომიგზავნო, ან უბრალოდ ეპიზოდის ბმული მომწერო და ახალ გეგმას მე მოვამზადებ.
 
