@@ -140,25 +140,47 @@ def probe_size(src):
 
 # --------------------------------------------------------------------------- download
 
+VIDEO_FORMAT = (
+    # many episodes carry YouTube AI-dubbed audio tracks (English, Portuguese...):
+    # always take the ORIGINAL-language audio; prefer H.264 video (fast to decode)
+    "bv*[height<=1080][vcodec^=avc1]+ba[ext=m4a][format_note*=original]/"
+    "bv*[height<=1080][vcodec^=avc1]+ba[format_note*=original]/"
+    "bv*[height<=1080]+ba[format_note*=original]/"
+    "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/bv*[height<=1080]+ba/b[height<=1080]/b")
+
+def ytdlp_base(extra_args):
+    base = ytdlp_cmd()
+    if not shutil.which("deno") and shutil.which("node") and "--js-runtimes" not in extra_args:
+        base += ["--js-runtimes", "node"]     # yt-dlp needs a JS runtime for YouTube
+    return base
+
+
+def ytdlp_try(args, extra_args):
+    res = subprocess.run(ytdlp_base(extra_args) + extra_args + args, capture_output=True, text=True)
+    if res.returncode != 0 and "not a bot" in res.stderr:
+        print("   YouTube asked to confirm you are not a bot. Run this on your own computer, or pass your\n"
+              "   browser login:  --ytdlp-arg=--cookies-from-browser --ytdlp-arg=chrome")
+    return res
+
+
 def download_source(url, work, extra_args):
     vid = video_id(url)
     if not vid:
         die(f"cannot read a YouTube video id from {url}")
     work.mkdir(parents=True, exist_ok=True)
-    ytdlp = ytdlp_cmd()
     outtmpl = str(work / "%(id)s.%(ext)s")
 
     video = work / f"{vid}.mp4"
     if not video.exists():
         print(f"-> downloading episode {vid} (once, then cached in {work})")
-        run(ytdlp + ["-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/bv*[height<=1080]+ba/b[height<=1080]/b",
-                     "--merge-output-format", "mp4", "-o", outtmpl, *extra_args, url])
+        res = ytdlp_try(["-f", VIDEO_FORMAT, "--merge-output-format", "mp4", "-o", outtmpl, url], extra_args)
+        if res.returncode != 0:
+            die("yt-dlp could not download the episode:\n" + res.stderr[-1500:])
     subs = find_subs(work, vid)
     if subs is None:
         print("-> downloading Spanish auto-captions (word timings)")
-        res = subprocess.run(ytdlp + ["--skip-download", "--write-auto-subs", "--sub-langs", "es-orig,es",
-                                      "--sub-format", "json3", "-o", outtmpl, *extra_args, url],
-                             capture_output=True, text=True)
+        res = ytdlp_try(["--skip-download", "--write-auto-subs", "--sub-langs", "es-orig,es",
+                         "--sub-format", "json3", "-o", outtmpl, url], extra_args)
         if res.returncode != 0:
             print("   (captions download failed - use --whisper for captions)\n" + res.stderr[-800:])
         subs = find_subs(work, vid)
