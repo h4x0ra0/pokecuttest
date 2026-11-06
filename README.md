@@ -37,20 +37,42 @@
 
 ## ინსტალაცია (ერთხელ)
 
-1. **Python 3.10+** და **ffmpeg** (libass-ით, სუბტიტრების ჩასაწვავად):
-   - Windows: `winget install Gyan.FFmpeg` (full build)
-   - macOS: `brew install ffmpeg` (თუ self-test libass-ზე იჩივლებს: `brew install ffmpeg-full`)
-   - Linux: `sudo apt install ffmpeg`
-2. ბიბლიოთეკები:
-   ```bash
-   pip install -r requirements.txt
+### Windows
+
+1. გახსენი **Terminal**: Start-ზე მარჯვენა კლიკი → «Terminal», ან ძებნაში ჩაწერე `cmd`.
+   ჩაწერე სამი ბრძანება, თითოეულის შემდეგ Enter:
    ```
-3. YouTube-დან ჩამოტვირთვას yt-dlp-ს JavaScript runtime სჭირდება. საუკეთესოა [Deno](https://deno.com)
-   (`winget install DenoLand.Deno` / `brew install deno`). Node.js-იც გამოდგება.
-4. შემოწმება (ინტერნეტი არ სჭირდება, სატესტო ვიდეოს სამივე რეჟიმში აკეთებს):
-   ```bash
+   winget install Python.Python.3.12
+   winget install Gyan.FFmpeg
+   winget install DenoLand.Deno
+   ```
+   თუ `winget` არ მუშაობს, Python ჩამოტვირთე python.org-იდან. ინსტალაციისას მონიშნე **«Add python.exe to PATH»**.
+2. Terminal **დახურე და თავიდან გახსენი**, რომ ახალი პროგრამები ამოიცნოს.
+3. კოდი ჩამოტვირთე: GitHub-ზე გახსენი რეპო → მწვანე ღილაკი **Code** → **Download ZIP**.
+   ZIP გახსენი, მაგალითად Desktop-ზე, საქაღალდეში `pokecuttest`.
+4. გახსენი ეს საქაღალდე File Explorer-ში. ზედა მისამართის ველში ჩაწერე `cmd` და დააჭირე Enter: Terminal პირდაპირ ამ საქაღალდეში გაიხსნება.
+5. ბიბლიოთეკების დაყენება და შემოწმება:
+   ```
+   pip install -r requirements.txt
    python scripts/make_shorts.py --selftest
    ```
+   ბოლოს `Done.` თუ დაწერა, ყველაფერი წესრიგშია.
+
+### macOS
+
+1. Terminal-ში ([Homebrew](https://brew.sh) თუ არ გაქვს, ჯერ ის დააყენე):
+   ```bash
+   brew install python ffmpeg deno
+   ```
+2. კოდი ჩამოტვირთე: GitHub → **Code** → **Download ZIP**, შემდეგ გახსენი.
+3. Terminal-ში ჩაწერე `cd ` (ბოლოს ჰარით), საქაღალდე ჩაათრიე Terminal-ში და დააჭირე Enter. შემდეგ:
+   ```bash
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install -r requirements.txt
+   python scripts/make_shorts.py --selftest
+   ```
+   ყოველ ახალ გაშვებაზე ჯერ `source .venv/bin/activate`.
+   თუ self-test libass-ზე იჩივლებს: `brew install ffmpeg-full`.
 
 ## გაშვება
 
@@ -65,8 +87,14 @@ python scripts/make_shorts.py clips/roca-project-114.json --only 01 04
 python scripts/make_shorts.py clips/roca-project-114.json --fast
 ```
 
+პირველ გაშვებაზე ეპიზოდი ჩამოიტვირთება (~1 GB, რამდენიმე წუთი), მერე თითო კლიპს დაახლოებით 1–2 წუთი სჭირდება.
+
 შედეგი იქმნება აქ: `output/roca-project-114/<id>/<id>.mp4` + `youtube.txt`.
 ყველა ტექსტი ერთად: `output/roca-project-114/UPLOAD_SHEET.md`.
+
+**ატვირთვა:** კომპიუტერიდან [YouTube Studio](https://studio.youtube.com) → **Create** → **Upload videos**.
+ვერტიკალური ვიდეო, რომელიც 3 წუთზე მოკლეა, ავტომატურად Short ხდება. სათაური და აღწერა `youtube.txt`-დან დააკოპირე.
+შეგიძლია `output` საქაღალდე Google Drive-ზეც ატვირთო და Short-ები ტელეფონიდან, YouTube აპით დადო.
 
 ### კადრის რეჟიმები (`--reframe`)
 
@@ -140,8 +168,11 @@ python scripts/make_shorts.py clips/roca-project-114.json --only 03 --keep-subs
 
 ## პრობლემები
 
-- **«Sign in to confirm you're not a bot»**: ჩამოტვირთვას ბრაუზერის cookies დაამატე:
-  `--ytdlp-arg=--cookies-from-browser --ytdlp-arg=chrome`
+- **`'python' is not recognized` / `'pip' is not recognized`**: Python PATH-ში არ არის. თავიდან დააყენე python.org-იდან,
+  მონიშნე «Add python.exe to PATH» და Terminal ხელახლა გახსენი. დროებით `py` ბრძანებაც გამოდგება
+  (`py -m pip install -r requirements.txt`, `py scripts/make_shorts.py ...`)
+- **«Sign in to confirm you're not a bot»**: ჩამოტვირთვას ბრაუზერის cookies დაამატე (ბრაუზერში YouTube-ზე შესული უნდა იყო):
+  `--ytdlp-arg=--cookies-from-browser --ytdlp-arg=firefox`. Chrome-ის შემთხვევაში ჯერ Chrome დახურე და `firefox`-ის ნაცვლად `chrome` დაწერე
 - **ffmpeg was built without libass**: დააყენე full build (იხ. ინსტალაცია)
 - **ეპიზოდი უკვე გადმოწერილი გაქვს**: `--source episodio.mp4 --subs episodio.es.json3`
   (subs-ის გარეშეც მუშაობს `--whisper`-ით)
