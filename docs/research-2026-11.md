@@ -45,10 +45,10 @@ ROCA PROJECT-ის საკუთარ clips არხს ამ ეპიზ
 
 | # | მომენტი | დრო | რატომ იმუშავებს |
 |---|---|---|---|
-| 1 | [«Al que tengáis que besar, besarle hoy»](https://www.youtube.com/watch?v=XDDt-IzJOcA&t=3392s) | 56:32–57:24 | ფორენზიკოსი, რომელმაც იცის, რა ემართება სხეულს სიკვდილის შემდეგ, კრემაციას არ ირჩევს. ბოლოს ძლიერი ციტატა და ტაში |
+| 1 | [«Al que tengáis que besar, besarle hoy»](https://www.youtube.com/watch?v=XDDt-IzJOcA&t=3392s) | 56:32–57:24 | სასამართლო ექსპერტმა ზუსტად იცის, რა ემართება სხეულს სიკვდილის შემდეგ, და მაინც კრემაციაზე უარს ამბობს. ბოლოს ძლიერი ციტატა და ტაში |
 | 2 | [ცხედრიდან ამოსული მცენარე](https://www.youtube.com/watch?v=XDDt-IzJOcA&t=2255s) | 37:35–38:30 | უჩვეულო, თან პოეტური ისტორია: მცენარე Palma-ს სასაფლაოზე დარგო. ბოლოს ტაში |
 | 3 | [მოკლული ქალის გული ისევ ცემს](https://www.youtube.com/watch?v=XDDt-IzJOcA&t=2426s) | 40:26–41:13 | true crime და ორგანოების დონაცია. კომენტარისთვის კითხვა: «¿Eres donante?» |
-| 4 | [«Nosotros somos el asesino perfecto»](https://www.youtube.com/watch?v=XDDt-IzJOcA&t=3494s) | 58:14–59:04 | ძლიერი hook, იუმორი და საინტერესო ფაქტი: ფორენზიკოსი სიკვდილის ბუნებრივ მიზეზს ვერ დაადასტურებს |
+| 4 | [«Nosotros somos el asesino perfecto»](https://www.youtube.com/watch?v=XDDt-IzJOcA&t=3494s) | 58:14–59:04 | ძლიერი hook, იუმორი და საინტერესო ფაქტი: სასამართლო ექსპერტს ბუნებრივი სიკვდილის ცნობის გაცემა არ შეუძლია |
 | 5 | [Ceuta: «autopsias a chicos de 20 años»](https://www.youtube.com/watch?v=XDDt-IzJOcA&t=3303s) | 55:03–56:00 | ემოციური და აქტუალური. ჰუმანური ტონით უნდა წარდგეს |
 | 6 | [«Para mí, la maldad no existe»](https://www.youtube.com/watch?v=XDDt-IzJOcA&t=928s) | 15:28–15:35 + 15:59–16:39 | დისკუსიას იწვევს («¿Existe la maldad? SÍ o NO»). ორი მონაკვეთია, jump cut-ით შეერთებული |
 | 7 | [გადაადგილებული ცხედარი](https://www.youtube.com/watch?v=XDDt-IzJOcA&t=1859s) | 30:59–31:44 | ნამდვილი საქმე: rigor mortis-მა ამხილა, რომ სახლი გაძარცვეს |
