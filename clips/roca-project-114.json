@@ -1,0 +1,183 @@
+{
+  "name": "roca-project-114",
+  "source": {
+    "url": "https://www.youtube.com/watch?v=XDDt-IzJOcA",
+    "podcast": "ROCA PROJECT",
+    "episode": "#114 - MÉDICO FORENSE: LA MUERTE HABLA | Borja Moreno en Roca Project",
+    "host": "Carlos Roca",
+    "guest": "Borja Moreno",
+    "published": "2026-11-04",
+    "views_when_planned": 546346
+  },
+  "credit": "ROCA PROJECT #114 · Borja Moreno",
+  "description_footer": "🎙️ Entrevista completa: ROCA PROJECT #114 con Borja Moreno\n👉 https://www.youtube.com/watch?v=XDDt-IzJOcA\nTodo el mérito de la conversación es de Carlos Roca y ROCA PROJECT.",
+  "default_hashtags": [
+    "#BorjaMoreno",
+    "#RocaProject",
+    "#MedicoForense"
+  ],
+  "reframe": "blur",
+  "style": {
+    "caption_uppercase": true,
+    "caption_max_words": 3,
+    "highlight": "#FFE500"
+  },
+  "clips": [
+    {
+      "id": "01-besar-hoy",
+      "title": "Médico forense: «Al que tengáis que besar, besarle hoy» 🤍 #shorts",
+      "hook": "Un forense elige cómo quiere que le entierren",
+      "segments": [
+        {
+          "start": "56:32.0",
+          "end": "57:23.6",
+          "start_at": "yo",
+          "end_after": "sea"
+        }
+      ],
+      "description": "Borja Moreno ha hecho cientos de autopsias y sabe exactamente lo que le pasa al cuerpo después de morir. Aun así, acaba de cambiar sus voluntades anticipadas: no quiere que le incineren. Quiere que le laven, le envuelvan en una sábana blanca y le entierren en tierra. «Somos polvo de estrellas: al que tengáis que besar, besarle hoy».",
+      "pinned_comment": "¿Tú qué prefieres: incineración o entierro? 👇",
+      "hashtags": [
+        "#Vida",
+        "#Muerte"
+      ]
+    },
+    {
+      "id": "02-planta-cadaver",
+      "title": "Del cuerpo de esta mujer creció una planta… y el forense la plantó en el cementerio 🌱 #shorts",
+      "hook": "Le había crecido una planta en el cuerpo",
+      "segments": [
+        {
+          "start": "37:35.8",
+          "end": "38:30.0",
+          "start_at": "Mi"
+        }
+      ],
+      "description": "Una mujer murió a la intemperie, bajo el sol de Mallorca, sin que nadie se diera cuenta. Cuando llegó a la sala de autopsias, de su cuerpo había empezado a crecer una plantita. El médico forense Borja Moreno hizo algo que nadie esperaba: la plantó en el cementerio de Palma. «Fíjate: lo que sale de ti genera vida».",
+      "pinned_comment": "¿Te parece un gesto bonito o extraño? 👇",
+      "hashtags": [
+        "#Historias"
+      ]
+    },
+    {
+      "id": "03-corazon-sigue-latiendo",
+      "title": "La asesinaron frente a un colegio… y su corazón sigue latiendo en otra persona ❤️ #shorts",
+      "hook": "Su corazón sigue latiendo en otra persona",
+      "segments": [
+        {
+          "start": "40:26.4",
+          "end": "41:13.2",
+          "start_at": "Entonces",
+          "end_after": "latiendo"
+        }
+      ],
+      "description": "Cuando alguien muere de forma violenta, el juez ordena una autopsia. Pero si la familia quiere donar los órganos, el forense tiene que decidir cuáles se pueden liberar. Borja Moreno recuerda el caso de una mujer asesinada a sangre fría frente a un colegio, delante de sus hijos: hoy su corazón sigue latiendo en otra persona.",
+      "pinned_comment": "¿Eres donante de órganos? Responde SÍ o NO 👇",
+      "hashtags": [
+        "#DonacionDeOrganos"
+      ]
+    },
+    {
+      "id": "04-asesino-perfecto",
+      "title": "Médico forense: «Nosotros somos el asesino perfecto» 😳 #shorts",
+      "hook": "¿Podría un forense cometer el crimen perfecto?",
+      "segments": [
+        {
+          "start": "58:14.8",
+          "end": "59:03.9",
+          "start_at": "Nosotros"
+        }
+      ],
+      "description": "«Yo te quito el puñal de la espalda y ha sido un infarto». El médico forense Borja Moreno explica por qué un forense sería el asesino perfecto… y la norma que existe precisamente para evitarlo: los forenses no pueden firmar certificados de muerte natural.",
+      "pinned_comment": "¿Sabías que los forenses no pueden firmar certificados de muerte natural? 👇",
+      "hashtags": [
+        "#TrueCrime"
+      ]
+    },
+    {
+      "id": "05-ceuta",
+      "title": "«No quiero seguir haciendo autopsias a chicos de 20 años» 💔 Un forense en Ceuta #shorts",
+      "hook": "Lo más duro de ser forense en Ceuta",
+      "segments": [
+        {
+          "start": "55:03.6",
+          "end": "55:59.6",
+          "start_at": "En",
+          "end_after": "Embarek"
+        }
+      ],
+      "description": "En Ceuta, Borja Moreno hizo más autopsias que nunca a personas más jóvenes que él: chicos que intentaban cruzar la valla y se ahogaban. Algunos habían venido andando desde Sudán. Para él, darles un entierro digno es una obligación: «Si perdemos los enterramientos, perdemos la cultura».",
+      "pinned_comment": "¿Conocías esta realidad? 👇",
+      "hashtags": [
+        "#Ceuta"
+      ]
+    },
+    {
+      "id": "06-la-maldad-no-existe",
+      "title": "Médico forense: «Para mí, la maldad no existe» 🤔 #shorts",
+      "hook": "¿Existe la maldad? Responde un forense",
+      "segments": [
+        {
+          "start": "15:28.7",
+          "end": "15:35.0",
+          "start_at": "Pero",
+          "end_after": "bueno"
+        },
+        {
+          "start": "15:59.5",
+          "end": "16:38.5",
+          "start_at": "El",
+          "end_after": "así"
+        }
+      ],
+      "description": "Borja Moreno evalúa la mente de personas que han cometido delitos graves. Su conclusión sorprende: la maldad como tal no existe. Existe un bien que se corrompe… o un trastorno mental que la explica. ¿Estás de acuerdo con él?",
+      "pinned_comment": "¿Existe la maldad? Responde SÍ o NO 👇",
+      "hashtags": [
+        "#PsiquiatriaForense"
+      ]
+    },
+    {
+      "id": "07-movieron-el-cadaver",
+      "title": "El forense supo que habían movido el cadáver solo con mirarlo 🕵️ #shorts",
+      "hook": "Movieron el cadáver… y el cuerpo los delató",
+      "segments": [
+        {
+          "start": "30:59.4",
+          "end": "31:44.2",
+          "start_at": "De",
+          "end_after": "tóxicos"
+        }
+      ],
+      "description": "Un hombre apareció muerto en una postura imposible. El médico forense Borja Moreno lo vio claro: alguien había movido el cadáver. Habían limpiado la escena y aprovechado para desvalijar la casa, convencidos de que nadie se daría cuenta. Pero el rigor mortis no miente.",
+      "pinned_comment": "¿Sabías que el cuerpo se queda rígido en la postura en la que mueres? 👇",
+      "hashtags": [
+        "#TrueCrime",
+        "#RigorMortis"
+      ]
+    },
+    {
+      "id": "08-manoli-felicidad",
+      "title": "Cómo afronta la muerte un médico forense: «Manoli, esta es tu felicidad» 🤍 #shorts",
+      "hook": "¿Cómo afronta la muerte quien la ve cada día?",
+      "segments": [
+        {
+          "start": "61:00.0",
+          "end": "61:06.9",
+          "start_at": "Cómo",
+          "end_after": "manera"
+        },
+        {
+          "start": "61:09.8",
+          "end": "61:57.6",
+          "start_at": "Me",
+          "end_after": "felices"
+        }
+      ],
+      "description": "Carlos Roca le pregunta a un médico forense cómo vive sabiendo que algún día dejará de existir. Su respuesta es el amor: «Si cada persona que encuentra la felicidad de alguien se la diese, todos seríamos mucho más felices».",
+      "pinned_comment": "¿Qué huella te gustaría dejar tú? 👇",
+      "hashtags": [
+        "#Felicidad"
+      ]
+    }
+  ]
+}
