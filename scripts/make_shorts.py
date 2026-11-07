@@ -419,6 +419,102 @@ def largest_face_cx(cv2, cascades, frame):
     return (x + fw / 2) / sw
 
 
+# --------------------------------------------------------------------------- thumbnail
+
+def pick_thumbnail_frame(src, segments, scaled_w):
+    """(episode time, crop x) of the frame with the biggest frontal face, which is usually
+    the most expressive close-up. Without opencv: one third into the clip, centre crop."""
+    a0, b0 = segments[0]
+    fallback = (a0 + (b0 - a0) / 3, (scaled_w - W) // 2)
+    try:
+        import cv2
+    except ImportError:
+        return fallback
+    frontal = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    cap = cv2.VideoCapture(str(src))
+    best = None
+    for a, b in segments:
+        t = a + 0.5
+        while t < b - 0.5:
+            cap.set(cv2.CAP_PROP_POS_MSEC, t * 1000.0)
+            ok, frame = cap.read()
+            if not ok:
+                break
+            h, w = frame.shape[:2]
+            sw = 960
+            gray = cv2.cvtColor(cv2.resize(frame, (sw, int(h * sw / w))), cv2.COLOR_BGR2GRAY)
+            min_side = max(30, gray.shape[0] // 16)
+            for x, y, fw, fh in frontal.detectMultiScale(gray, 1.1, 6, minSize=(min_side, min_side)):
+                if best is None or fw * fh > best[0]:
+                    best = (fw * fh, t, (x + fw / 2) / sw)
+            t += 1.0
+    cap.release()
+    if best is None:
+        return fallback
+    _, t, cx = best
+    return t, int(min(max(cx * scaled_w - W / 2, 0), scaled_w - W))
+
+
+def crop_x_at(src, t, scaled_w):
+    """Crop x that centres the largest face in the frame at episode time t."""
+    try:
+        import cv2
+    except ImportError:
+        return (scaled_w - W) // 2
+    names = ["haarcascade_frontalface_default.xml", "haarcascade_profileface.xml"]
+    cascades = [cv2.CascadeClassifier(cv2.data.haarcascades + n) for n in names]
+    cap = cv2.VideoCapture(str(src))
+    cap.set(cv2.CAP_PROP_POS_MSEC, t * 1000.0)
+    ok, frame = cap.read()
+    cap.release()
+    cx = largest_face_cx(cv2, cascades, frame) if ok else None
+    if cx is None:
+        return (scaled_w - W) // 2
+    return int(min(max(cx * scaled_w - W / 2, 0), scaled_w - W))
+
+
+def build_thumbnail_ass(text, brand, style):
+    accent = style.get("highlight", "#FFE500")
+    size = style.get("thumbnail_size", 200)
+    lines = [
+        "[Script Info]", "ScriptType: v4.00+", f"PlayResX: {W}", f"PlayResY: {H}",
+        "WrapStyle: 0", "ScaledBorderAndShadow: yes", "YCbCr Matrix: TV.709", "",
+        "[V4+ Styles]",
+        "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, "
+        "Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, "
+        "Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
+        f"Style: Thumb,{style.get('headline_font', FONT_HEADLINE)},{size},&H00FFFFFF,&H00FFFFFF,"
+        "&H00000000,&H50000000,0,0,0,0,100,100,1,0,1,10,7,8,60,60,0,1",
+        f"Style: Brand,{FONT_HOOK},40,&H00101010,&H00101010,{style_color(accent or '#FFE500')},"
+        "&H00000000,0,0,0,0,100,100,1,0,3,12,0,7,0,0,0,1",
+        "", "[Events]",
+        "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
+    ]
+    if brand:
+        lines.append(f"Dialogue: 1,0:00:00.00,0:00:10.00,Brand,,0,0,0,,"
+                     f"{{\\an7\\pos(64,150)}}{ass_text(brand.upper())}")
+    if text:
+        lines.append("Dialogue: 0,0:00:00.00,0:00:10.00,Thumb,,0,0,0,,{\\an8\\pos(540,250)}"
+                     + headline_text(text.upper(), ass_color(accent or "#FFE500")))
+    return "\n".join(lines) + "\n"
+
+
+def render_thumbnail(src, t, crop_x, scaled_w, text, brand, style, out_jpg, fonts_rel):
+    """1080x1920 JPG: the chosen frame cropped full screen, a dark fade at the top and the
+    headline in huge letters with the accent keyword, plus the brand tag."""
+    ass = out_jpg.with_suffix(".ass")
+    ass.write_text(build_thumbnail_ass(text, brand, style), encoding="utf-8")
+    sub = f"ass=filename={ass.name}" + (f":fontsdir={fonts_rel}" if fonts_rel else "")
+    graph = (f"[0:v]scale={scaled_w}:{H},crop={W}:{H}:{crop_x}:0,setsar=1,format=rgba[v];"
+             f"color=c=black:s={W}x1150:d=1,format=rgba,geq=r=0:g=0:b=0:a='175*(1-Y/H)'[fade];"
+             f"[v][fade]overlay=0:0,format=yuv420p,{sub}[out]")
+    for q in ("2", "5", "8"):        # YouTube accepts thumbnails up to 2 MB
+        run(["ffmpeg", "-hide_banner", "-y", "-ss", f"{t:.3f}", "-i", str(src), "-frames:v", "1",
+             "-filter_complex", graph, "-map", "[out]", "-q:v", q, out_jpg.name], cwd=out_jpg.parent)
+        if out_jpg.stat().st_size < 2_000_000:
+            break
+
+
 # --------------------------------------------------------------------------- captions (ASS)
 
 def paginate(words, max_words, max_chars, max_gap=0.6):
@@ -598,6 +694,24 @@ def extract_audio(src, segments, wav):
 
 # --------------------------------------------------------------------------- metadata
 
+def youtube_tags(plan, clip):
+    """Clip tags + default tags, de-duplicated, cut to YouTube's 500-character limit
+    (YouTube counts the commas, and the quotes it adds around tags that contain spaces)."""
+    out, seen = [], set()
+    for t in clip.get("tags", []) + plan.get("default_tags", []):
+        t = t.strip().lstrip("#")
+        if t and t.lower() not in seen:
+            seen.add(t.lower())
+            out.append(t)
+
+    def size(ts):
+        return sum(len(x) + (2 if " " in x else 0) for x in ts) + max(0, len(ts) - 1)
+
+    while out and size(out) > 500:
+        out.pop()
+    return out, size(out)
+
+
 def write_metadata(plan, clip, folder):
     tags = []
     for t in clip.get("hashtags", []) + plan.get("default_hashtags", []):
@@ -613,10 +727,15 @@ def write_metadata(plan, clip, folder):
         desc += "\n\n" + plan["description_footer"].strip()
     if tags:
         desc += "\n\n" + " ".join(tags)
+    yt_tags, tags_len = youtube_tags(plan, clip)
+    cid = clip["id"]
     text = (f"TÍTULO ({len(title)}/100):\n{title}\n\nDESCRIPCIÓN:\n{desc}\n\n"
-            f"COMENTARIO FIJADO:\n{clip.get('pinned_comment', '')}\n")
+            f"ETIQUETAS / TAGS ({tags_len}/500), pegar en YouTube Studio > Etiquetas:\n{', '.join(yt_tags)}\n\n"
+            f"COMENTARIO FIJADO:\n{clip.get('pinned_comment', '')}\n\n"
+            f"MINIATURA: {cid}_thumbnail.jpg (Studio > Miniatura > Subir). Si tu canal aún no puede subir\n"
+            f"miniaturas de Shorts, elige en la app de YouTube un fotograma del segundo 0-2: es el mismo diseño.\n")
     (folder / "youtube.txt").write_text(text, encoding="utf-8")
-    return title, desc
+    return title, desc, yt_tags
 
 
 # --------------------------------------------------------------------------- main flow
@@ -684,10 +803,12 @@ def process_plan(plan, args):
         zoom = float(args.zoom or clip.get("zoom") or plan.get("zoom") or 1.0)
         layout = layout_for(reframe, src_w, src_h, zoom)
         crop_expr = None
-        if reframe == "face":
+        if reframe == "face" and not args.thumbnails_only:
             crop_expr = face_crop_expr(src, segments, even(H * src_w / src_h))
 
-        if reuse:
+        if args.thumbnails_only:
+            pass
+        elif reuse:
             print(f"   using your edited {ass.name}")
         else:
             hook = None if args.no_hook else clip.get("hook")
@@ -702,13 +823,28 @@ def process_plan(plan, args):
                 music = Path(args.plan).resolve().parent / music
             if not music.exists():
                 die(f"music file not found: {music}")
-        render_clip(src, segments, ass, out, reframe, layout, crop_expr, fonts_rel, args.fast,
-                    music, float(args.music_volume or plan.get("music_volume") or 0.12))
-        title, desc = write_metadata(plan, clip, folder)
-        print(f"   OK -> {out}")
-        sheet.append(f"## {cid}\n\n- file: `{cid}/{cid}.mp4` ({duration:.0f} s)\n"
+        if not args.thumbnails_only:
+            render_clip(src, segments, ass, out, reframe, layout, crop_expr, fonts_rel, args.fast,
+                        music, float(args.music_volume or plan.get("music_volume") or 0.12))
+            print(f"   OK -> {out}")
+        if not args.no_thumbnail:
+            scaled_w = even(H * src_w / src_h)
+            if clip.get("thumbnail_at"):
+                t_thumb = parse_time(clip["thumbnail_at"])
+                x_thumb = crop_x_at(src, t_thumb, scaled_w)
+            else:
+                t_thumb, x_thumb = pick_thumbnail_frame(src, segments, scaled_w)
+            thumb = folder / f"{cid}_thumbnail.jpg"
+            render_thumbnail(src, t_thumb, x_thumb, scaled_w,
+                             clip.get("thumbnail_text") or clip.get("hook") or "",
+                             plan.get("brand"), style, thumb, fonts_rel)
+            print(f"   thumbnail -> {thumb.name} (frame {fmt_clock(t_thumb)})")
+        title, desc, yt_tags = write_metadata(plan, clip, folder)
+        sheet.append(f"## {cid}\n\n- file: `{cid}/{cid}.mp4` ({duration:.0f} s), thumbnail: "
+                     f"`{cid}/{cid}_thumbnail.jpg`\n"
                      f"- cut: {', '.join(f'{fmt_clock(a)}-{fmt_clock(b)}' for a, b in segments)}\n\n"
                      f"**Title:** {title}\n\n**Description:**\n\n```\n{desc}\n```\n\n"
+                     f"**Tags:** {', '.join(yt_tags)}\n\n"
                      f"**Pinned comment:** {clip.get('pinned_comment', '')}\n")
     (out_root / "UPLOAD_SHEET.md").write_text("\n".join(sheet), encoding="utf-8")
     print(f"\nDone. Videos and texts are in {out_root}")
@@ -760,6 +896,9 @@ def main():
     p.add_argument("--no-captions", action="store_true", help="do not burn captions")
     p.add_argument("--no-hook", action="store_true", help="do not burn the hook title")
     p.add_argument("--no-snap", action="store_true", help="use the plan times exactly")
+    p.add_argument("--no-thumbnail", action="store_true", help="do not make <id>_thumbnail.jpg")
+    p.add_argument("--thumbnails-only", action="store_true",
+                   help="only (re)make thumbnails and texts, skip the videos")
     p.add_argument("--keep-subs", action="store_true",
                    help="re-render with the existing <id>.ass (after you fixed typos in it)")
     p.add_argument("--fast", action="store_true", help="quick low-quality render for checking cuts")

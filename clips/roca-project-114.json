@@ -26,6 +26,18 @@
     "headline_size": 170,
     "headline_seconds": 3.0
   },
+  "default_tags": [
+    "Borja Moreno",
+    "médico forense",
+    "forense",
+    "Roca Project",
+    "Carlos Roca",
+    "podcast en español",
+    "entrevista",
+    "medicina forense",
+    "Momentos Podcast",
+    "shorts"
+  ],
   "clips": [
     {
       "id": "01-besar-hoy",
@@ -44,6 +56,14 @@
       "hashtags": [
         "#Vida",
         "#Muerte"
+      ],
+      "tags": [
+        "incineración",
+        "entierro",
+        "qué pasa cuando morimos",
+        "voluntades anticipadas",
+        "polvo de estrellas",
+        "reflexiones de vida"
       ]
     },
     {
@@ -61,6 +81,14 @@
       "pinned_comment": "¿Te parece un gesto bonito o extraño? 👇",
       "hashtags": [
         "#Historias"
+      ],
+      "tags": [
+        "autopsia",
+        "historias reales",
+        "momia",
+        "Mallorca",
+        "cementerio de Palma",
+        "historias de forenses"
       ]
     },
     {
@@ -79,6 +107,13 @@
       "pinned_comment": "¿Eres donante de órganos? Responde SÍ o NO 👇",
       "hashtags": [
         "#DonacionDeOrganos"
+      ],
+      "tags": [
+        "donación de órganos",
+        "trasplante de corazón",
+        "donante de órganos",
+        "true crime",
+        "asesinato"
       ]
     },
     {
@@ -96,6 +131,13 @@
       "pinned_comment": "¿Sabías que los forenses no pueden firmar certificados de muerte natural? 👇",
       "hashtags": [
         "#TrueCrime"
+      ],
+      "tags": [
+        "crimen perfecto",
+        "asesino perfecto",
+        "true crime",
+        "muerte natural",
+        "certificado de defunción"
       ]
     },
     {
@@ -114,6 +156,13 @@
       "pinned_comment": "¿Conocías esta realidad? 👇",
       "hashtags": [
         "#Ceuta"
+      ],
+      "tags": [
+        "Ceuta",
+        "valla de Ceuta",
+        "migrantes",
+        "autopsias",
+        "historias reales"
       ]
     },
     {
@@ -138,6 +187,13 @@
       "pinned_comment": "¿Existe la maldad? Responde SÍ o NO 👇",
       "hashtags": [
         "#PsiquiatriaForense"
+      ],
+      "tags": [
+        "maldad",
+        "existe la maldad",
+        "psiquiatría forense",
+        "psicópatas",
+        "mente criminal"
       ]
     },
     {
@@ -157,6 +213,13 @@
       "hashtags": [
         "#TrueCrime",
         "#RigorMortis"
+      ],
+      "tags": [
+        "rigor mortis",
+        "escena del crimen",
+        "cadáver",
+        "true crime",
+        "investigación criminal"
       ]
     },
     {
@@ -181,6 +244,13 @@
       "pinned_comment": "¿Qué huella te gustaría dejar tú? 👇",
       "hashtags": [
         "#Felicidad"
+      ],
+      "tags": [
+        "felicidad",
+        "cómo afrontar la muerte",
+        "sentido de la vida",
+        "reflexiones",
+        "amor"
       ]
     }
   ]
